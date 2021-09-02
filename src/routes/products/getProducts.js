@@ -1,16 +1,14 @@
-const ProductService = require('../../services/productsService')
+const {ProductsService} = require("../../services/productsService");
+const {responsePrettier} = require("../../utils/responsePrettier");
 
+const productsService = new ProductsService();
 
 module.exports.getProducts = async event => {
-  const { descripcion } = req.query;
   try {
-    const productsAll = await ProductService.getProducts({descripcion});
-
-    res.status(200).json({
-      data: productsAll,
-      message: "Listado de Productos",
-    });
+    const productsAll = await productsService.getProducts();
+    return responsePrettier("success", 200, productsAll, "Listado de Productos")
   } catch (error) {
-    next(error);
+    console.log(error)
+    return responsePrettier("error", 206, error);
   }
 }

@@ -1,5 +1,5 @@
 const { MongoClient, ObjectId } = require("mongodb");
-const { config } = require("../../config/index");
+const { config } = require('../config/config');
 
 const DBUSER = encodeURIComponent(config.dbUser);
 const DBPASS = encodeURIComponent(config.dbPass);
@@ -34,9 +34,15 @@ class MongoLib {
     return MongoLib.connection;
   }
 
-  getAll(collection, query) {
+  getAllTags(collection, query) {
     return this.connect().then((db) => {
       return db.collection(collection).find(query).toArray();
+    });
+  }
+
+  getAll(collection) {
+    return this.connect().then((db) => {
+      return db.collection(collection).find({}).toArray();
     });
   }
 

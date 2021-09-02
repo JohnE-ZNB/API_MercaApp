@@ -1,14 +1,14 @@
-const MongoLib = require('../lib/mongo')
+const MongoLib = require('../lib/mongoDB')
 
-class productsService {
+class ProductsService {
   constructor() {
     this.collection = "products";
     this.mongoDB = new MongoLib();
   }
 
-  async getProducts({ descripcion }) {
-    const query = descripcion && { descripcion: { $in: descripcion } };
-    const products = await this.mongoDB.getAll(this.collection, query);
+  async getProducts() {
+    const products = await this.mongoDB.getAll(this.collection);
+    console.log(products);
     return products || [];
   }
 
@@ -21,19 +21,19 @@ class productsService {
     return createProductId;
   }
 
-  async updateMovie({ productId, product } = {}) {
-    const updateMovieId = await this.mongoDB.update(
+  async updateProduct({ productId, product } = {}) {
+    const updateProductId = await this.mongoDB.update(
       this.collection,
       productId,
       product
     );
-    return updateMovieId;
+    return updateProductId;
   }
 
-  async deleteMovie({ productId }) {
+  async deleteProduct({ productId }) {
     const deleteProductId = await this.mongoDB.delete(this.collection, productId);
     return deleteProductId;
   }
 }
 
-module.exports = productsService;
+module.exports.ProductsService = ProductsService;
