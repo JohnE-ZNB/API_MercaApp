@@ -1,10 +1,9 @@
 service: mercaapp
-# app and org for use with dashboard.serverless.com
-#app: your-app-name
-#org: your-org-name
 
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
+plugins:
+  - serverless-reqvalidator-plugin
+  - serverless-aws-documentation
+
 frameworkVersion: '2'
 
 provider:
@@ -23,6 +22,7 @@ provider:
     DB_PASS: ZJYvNbt4C5iBGfDl
     DB_HOST: cluster0.zwdlp.mongodb.net
     DB_NAME: mercaApp_db
+    SIZE_ID_PRODUCT: 24
 
 package:
   patterns: 
@@ -39,6 +39,57 @@ layers:
     package:
       patterns: 
         - node_modules/**
+
+custom:
+  documentation:
+    api:
+      info:
+        version: '1.0.0'
+        title: ApiMercaApp
+        description: Esta API permite hacer administrar tus productos de forma basica
+      contact:
+          name: "John Edison Cortes"
+          url: "https://www.linkedin.com/in/john-edison-cortes-rivera-074249160/"
+          email: "johne.cr@hotmail.com"
+      tags:
+        -
+          name: Administracion MercaApp
+          description: Adminitracion de Productos MercaApp
+    models:
+      - name: CrearProducto
+        contentType: "application/json"
+        schema:
+          required: 
+            - nombre
+            - descripcion
+            - categoria
+            - precio
+            - cantidad
+          properties:
+            nombre:
+              type: string
+            descripcion:
+              type: string
+            categoria:
+              type: string
+            precio:
+              type: number
+            cantidad:
+              type: number
+      - name: ActualizarProducto
+        contentType: "application/json"
+        schema:
+          properties:
+            nombre:
+              type: string
+            descripcion:
+              type: string
+            categoria:
+              type: string
+            precio:
+              type: number
+            cantidad:
+              type: number
 
 functions:
   lib-mongodb:
@@ -57,6 +108,9 @@ functions:
       - http:
           method: get
           path: productos
+          documentation:
+            summary: "Get Products Service"
+            description: "Servicio para consultar todos los productos"
     layers:
       - { Ref: NodejsLambdaLayer}
   getProduct:
@@ -68,6 +122,18 @@ functions:
       - http:
           method: get
           path: productos/{productId}
+          documentation:
+            summary: "Get Product by Id Service"
+            description: "Servicio para consultar solo un producto por medio de su Id"
+            tags:
+              - pathParameters - productId
+            pathParams:
+            - name: "productId"
+              description: "Es el ID del producto que se va a consultar"
+              schema:
+                type: "string"
+                minLength: 24
+                maxLength: 24
           request:
             parameters:
               paths:
@@ -81,8 +147,21 @@ functions:
     timeout: 10
     events:
       - http:
+          documentation:
+            summary: "Create Product Service"
+            description: "Crear un nuevo usuario"
+            tags:
+              - Body - nombre
+              - Body - descripcion
+              - Body - categoria
+              - Body - precio
+              - Body - nombre
+              - Body - cantidad
+            requestModels:
+              "application/json": CrearProducto
           method: post
           path: productos
+          reqValidatorName: onlyBody
     layers:
       - { Ref: NodejsLambdaLayer}
   updateProduct:
@@ -92,8 +171,25 @@ functions:
     timeout: 10
     events:
       - http:
+          documentation:
+            summary: "Update Product Service"
+            description: "Actualizar un producto"
+            tags:
+              - pathParameters[productId]
+              - Body - nombre - Opcional
+              - Body - descripcion - Opcional
+              - Body - categoria - Opcional
+              - Body - precio - Opcional
+              - Body - nombre - Opcional
+              - Body - cantidad - Opcional
+            pathParams:
+            - name: "productId"
+              description: "Es el ID del producto que se va actualizar"
+              schema:
+                type: "string"
           method: put
           path: productos/{productId}
+          reqValidatorName: allBodyAndParameters
           request:
             parameters:
               paths:
@@ -109,9 +205,79 @@ functions:
       - http:
           method: delete
           path: productos/{productId}
+          documentation:
+            summary: "Delete Product Service"
+            description: "Eliminar un usuario"
+            pathParams:
+            - name: "productId"
+              description: "Es el ID del producto que se va actualizar"
+              schema:
+                type: "string"
+                minLength: 24
+                maxLength: 24
+          reqValidatorName: onlyParameters
           request:
             parameters:
               paths:
                 productId: true
     layers:
       - { Ref: NodejsLambdaLayer}
+
+resources:
+  Resources:
+    onlyBody:  
+      Type: "AWS::ApiGateway::RequestValidator"
+      Properties:
+        Name: 'only-body'
+        RestApiId: 
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: false
+    onlyParameters:  
+      Type: "AWS::ApiGateway::RequestValidator"
+      Properties:
+        Name: 'only-Parameters'
+        RestApiId: 
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: false
+        ValidateRequestParameters: true
+    allBodyAndParameters:  
+      Type: "AWS::ApiGateway::RequestValidator"
+      Properties:
+        Name: 'all-Body-And-Parameters'
+        RestApiId: 
+          Ref: ApiGatewayRestApi
+        ValidateRequestBody: true
+        ValidateRequestParameters: true
+    GatewayResponseDefault400:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        RestApiId: 
+          Ref: 'ApiGatewayRestApi'
+        ResponseType: DEFAULT_4XX
+        ResponseTemplates:
+          application/json: "{\"MsgRsAPI\":{\"StatusCode\":400,\"Message\":$context.error.messageString,\"validation\":\"$context.error.validationErrorString\",\"Type\":\"$context.error.responseType\"}}"
+    GatewayResponseDefault500:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        RestApiId: 
+          Ref: 'ApiGatewayRestApi'
+        ResponseType: DEFAULT_5XX
+        ResponseTemplates:
+          application/json: "{\"MsgRsAPI\":{\"StatusCode\":500,\"Message\":$context.error.messageString,\"validation\":\"$context.error.validationErrorString\",\"Type\":\"$context.error.responseType\"}}"
+    GatewayResponseBadRequestBody:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        RestApiId: 
+          Ref: 'ApiGatewayRestApi'
+        ResponseType: BAD_REQUEST_BODY
+        ResponseTemplates:
+          application/json: "{\"MsgRsAPI\":{\"StatusCode\":400,\"Message\":$context.error.messageString,\"validation\":\"$context.error.validationErrorString\",\"Type\":\"$context.error.responseType\"}}"
+    GatewayResponseBadRequestParameters:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        RestApiId: 
+          Ref: 'ApiGatewayRestApi'
+        ResponseType: BAD_REQUEST_PARAMETERS
+        ResponseTemplates:
+          application/json: "{\"MsgRsAPI\":{\"StatusCode\":400,\"Message\":$context.error.messageString,\"validation\":\"$context.error.validationErrorString\",\"Type\":\"$context.error.responseType\"}}"

@@ -3,11 +3,8 @@ const { responsePrettier } = require("../../utils/responsePrettier");
 const productsService = new ProductsService();
 
 module.exports.updateProduct = async (event) => {
-  console.log(event)
   const productId = event.pathParameters.productId;
   const product = JSON.parse(event.body);
-  console.log(productId);
-  console.log(product);
   try {
     const updateProductId = await productsService.updateProduct({
       productId,

@@ -11,6 +11,7 @@ const responsePrettier = (type, codStatus, resBody, message='') =>{
       }),
       "isBase64Encoded": false
     };
+    
     return resp;
   }
 

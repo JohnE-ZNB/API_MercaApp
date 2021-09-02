@@ -14,6 +14,8 @@ class ProductsService {
 
   async getProduct({ productId }) {
     const product = await this.mongoDB.get(this.collection, productId);
+    console.log("ServiceGetProduct");
+    console.log(product);
     return product || {};
   }
   async createProduct({ product }) {
@@ -32,6 +34,8 @@ class ProductsService {
 
   async deleteProduct({ productId }) {
     const deleteProductId = await this.mongoDB.delete(this.collection, productId);
+    console.log("ServiceDelete");
+    console.log(deleteProductId);
     return deleteProductId;
   }
 }
