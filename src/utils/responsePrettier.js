@@ -4,6 +4,8 @@ const responsePrettier = (type, codStatus, resBody, message='') =>{
       "statusCode": codStatus,
       "headers": {
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin" : "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
       },
       "body":JSON.stringify({
         "severity": "Err",
@@ -19,12 +21,11 @@ const responsePrettier = (type, codStatus, resBody, message='') =>{
     "statusCode": codStatus,
     "headers": {
       "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
     },
-    "body": JSON.stringify({
-      "data": resBody,
-      "message": message
-    }),
-    "isBase64Encoded": false
+    "body": JSON.stringify(resBody),
+    "isBase64Encoded": false,
   };
 
   return resp;

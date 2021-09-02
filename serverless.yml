@@ -108,6 +108,7 @@ functions:
       - http:
           method: get
           path: productos
+          cors: true
           documentation:
             summary: "Get Products Service"
             description: "Servicio para consultar todos los productos"
@@ -122,6 +123,7 @@ functions:
       - http:
           method: get
           path: productos/{productId}
+          cors: true
           documentation:
             summary: "Get Product by Id Service"
             description: "Servicio para consultar solo un producto por medio de su Id"
@@ -132,8 +134,6 @@ functions:
               description: "Es el ID del producto que se va a consultar"
               schema:
                 type: "string"
-                minLength: 24
-                maxLength: 24
           request:
             parameters:
               paths:
@@ -161,6 +161,7 @@ functions:
               "application/json": CrearProducto
           method: post
           path: productos
+          cors: true
           reqValidatorName: onlyBody
     layers:
       - { Ref: NodejsLambdaLayer}
@@ -189,6 +190,7 @@ functions:
                 type: "string"
           method: put
           path: productos/{productId}
+          cors: true
           reqValidatorName: allBodyAndParameters
           request:
             parameters:
@@ -205,6 +207,7 @@ functions:
       - http:
           method: delete
           path: productos/{productId}
+          cors: true
           documentation:
             summary: "Delete Product Service"
             description: "Eliminar un usuario"
@@ -213,8 +216,6 @@ functions:
               description: "Es el ID del producto que se va actualizar"
               schema:
                 type: "string"
-                minLength: 24
-                maxLength: 24
           reqValidatorName: onlyParameters
           request:
             parameters:
