@@ -35,17 +35,17 @@ Se trabajó con las siguientes herramientas:
 - [NodeJS](https://nodejs.org/es/) versión 14.17.5
 - [Serverless](https://www.serverless.com/framework/docs/getting-started) versión 2.21
 - [Mongo DB](https://www.npmjs.com/package/mongodb) version 4.1.1 
+- [AWS IAM](https://aws.amazon.com/es/iam/?nc2=type_a)
 - [AWS Api Gateway](https://aws.amazon.com/es/api-gateway/?nc2=type_a)
 - [AWS Lambda](https://aws.amazon.com/es/lambda/?nc2=type_a)
 
-
 ## Instalación
 
-Serverless
+**Serverless**
 ```sh
 npm install -g serverless
 ```
-MongoDB
+**MongoDB**
 
 ```sh
 npm install mongdb
@@ -66,17 +66,23 @@ Instalación de plugins
 npm install serverless-reqvalidator-plugin
 npm install serverless-aws-documentation --save-dev
 ```
+## Configuración
+
+Se debe crear una cuenta **gratuita** en AWS (**requiere tarjeta de crédito**):
+- Se ingresa a IAM para crear un usuario
+- Se aplica políticas de acceso [AdministratorAccess] 
+- Se obtiene la key y el secret que usaremos con el serveless más adelante
 
 ## Desarrollo
 
-Configuración de credenciales para los deploy de serveless
+**Configuración de credenciales para los deploy de serveless**
 
 ```sh
 serverless config credentials --provider aws --key key --secret secret
 serverless create --template aws-nodejs --path mercaApp
 ```
 
-Configuración de plugins
+**Configuración de plugins**
 
 Dentro del archivo serverless.yml posterior a service: <nombre_app>
 ```sh
@@ -85,7 +91,7 @@ plugins:
   - serverless-aws-documentation
 ```
 
-Uso de Mongo DB como layer de lambda
+Uso de **Mongo DB** como layer de lambda
 ```sh
 npm install --prefix ./nodejs mongodb
 ```
