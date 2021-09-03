@@ -1,0 +1,25 @@
+{
+  "name": "mercaapp",
+  "version": "1.0.0",
+  "description": "Link de la aplicación: \"http://mercaapp.web-host.s3-website-us-east-1.amazonaws.com\" desplegado en un Buckets AWS S3",
+  "main": "handler.js",
+  "dependencies": {
+    "mongodb": "^4.1.1",
+    "serverless-reqvalidator-plugin": "^2.0.0",
+    "serverless-aws-documentation": "^1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohnE-ZNB/API_MercaApp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JohnE-ZNB/API_MercaApp/issues"
+  },
+  "homepage": "https://github.com/JohnE-ZNB/API_MercaApp#readme"
+}
