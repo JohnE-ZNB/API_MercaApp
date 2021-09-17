@@ -11,11 +11,11 @@
 
 ## Endpoints
 
-- GET https://b88gnw8zxf.execute-api.us-east-1.amazonaws.com/dev/productos
-- GET https://b88gnw8zxf.execute-api.us-east-1.amazonaws.com/dev/productos/:id
-- POST https://b88gnw8zxf.execute-api.us-east-1.amazonaws.com/dev/productos
-- PUT https://b88gnw8zxf.execute-api.us-east-1.amazonaws.com/dev/productos/:id
-- DELETE https://b88gnw8zxf.execute-api.us-east-1.amazonaws.com/dev/productos/:id
+- GET 
+- GET 
+- POST 
+- PUT 
+- DELETE 
 
 BODY: **json**
 ```sh
